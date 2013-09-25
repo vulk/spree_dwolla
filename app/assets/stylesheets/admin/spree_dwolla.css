@@ -1,0 +1,18 @@
+/*
+ *= require admin/spree_backend
+*/
+
+.dwolla_log_entry {
+
+}
+
+.dwolla_log_entry span {
+  display: block;
+  font-size: 10px;
+  color: #96ADBF;
+  padding: 0 0 5px;
+}
+
+.dwolla_log_entry p {
+  font-size: 12px;
+}

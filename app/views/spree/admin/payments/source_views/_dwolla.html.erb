@@ -1,0 +1,28 @@
+<fieldset data-hook="dwolla">
+  <legend align="center"><%= Spree.t(:transaction, :scope => :dwolla) %></legend>
+
+  <div class="row">
+    <div class="alpha six columns">
+      <dl>
+        <dt><%= Spree.t(:oauth_token, :scope => :dwolla) %>:</dt>
+        <dd><%= payment.source.oauth_token %></dd>
+
+        <dt><%= Spree.t(:transaction_id, :scope => :dwolla) %>:</dt>
+        <dd><%= payment.source.transaction_id %></dd>
+      </dl>
+    </div>
+  </div>
+</fieldset>
+
+<% if payment.log_entries %>
+<fieldset data-hook="dwolla">
+  <legend><%= Spree.t(:payment_log, :scope => :dwolla) %></legend>
+
+  <% payment.log_entries.reverse.each do |log| %>
+  <div class="row dwolla_log_entry">
+    <span>Updated at <%= log.updated_at %>:</span>
+    <p><%= log[:details] %></p>
+  </div>
+  <% end %>
+</fieldset>
+<% end %>

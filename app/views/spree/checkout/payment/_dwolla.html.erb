@@ -1,0 +1,39 @@
+<div class="connect_dwolla">
+  <% if not session[:dwolla_oauth_token] %>
+  <p>Click on the button below to connect your Dwolla account.</p>
+
+  <div class="button_wrapper">
+    <%= link_to('Connect with Dwolla', dwolla_auth_url, :id => "dwolla_button") %>
+  </div>
+  <% else %>
+  <p>Not <%= session[:dwolla_name] %>? <a href="<%= dwolla_logout_url %>">Click here</a> to logout of Dwolla.</p>
+
+  <fieldset class="no-border-bottom">
+    <% if session[:dwolla_funding_sources] %>
+    <div class="row">
+      <div data-hook="dwolla_funding_source">
+        <div class="field">
+          <%= label_tag 'dwolla_funding_source', raw(Spree.t(:dwolla_funding_source, :scope => :dwolla) + content_tag(:span, ' *', :class => 'required')) %>
+          <%= select_tag :dwolla_funding_source, options_for_select(session[:dwolla_funding_sources]) %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+
+    <div class="row">
+      <div data-hook="dwolla_pin">
+        <div class="field">
+          <%= label_tag 'dwolla_pin', raw(Spree.t(:dwolla_pin, :scope => :dwolla) + content_tag(:span, ' *', :class => 'required')) %>
+          <%= password_field_tag :dwolla_pin, '', :class => 'required fullwidth', :maxlength => 4 %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <% end %>
+</div>
+
+<script>
+  SpreeDwolla.paymentMethodID = "<%= payment_method.id %>"
+  SpreeDwolla.payUrl = "<%= dwolla_pay_url %>"
+  SpreeDwolla.dwollaId = "<%= session[:dwolla_id] %>"
+</script>

@@ -1,0 +1,42 @@
+/*
+ *= require store/spree_frontend
+*/
+.connect_dwolla {
+
+}
+
+.connect_dwolla p {
+
+}
+
+.connect_dwolla .row {
+
+}
+
+.connect_dwolla .row label {
+  display: block;
+}
+
+.connect_dwolla .button_wrapper {
+  text-align: center;
+}
+
+#dwolla_button {
+  margin: 0 auto;
+  width: 180px;
+  height: 34px;
+  display: inline-block;
+  background: url(connect-dwolla.png) no-repeat 0 0;
+  text-indent: -9999px;
+  -webkit-transition-duration: 0;
+  -moz-transition-duration: 0;
+  transition-duration: 0;
+}
+
+#dwolla_button:hover {
+  background-position: 0 -34px;
+}
+
+#dwolla_button:active {
+  background-position: 0 -68px;
+}
