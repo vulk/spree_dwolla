@@ -50,7 +50,7 @@ module Spree
 
         dwolla_checkout.update_column(:transaction_id, transaction_id)
 
-        ActiveMerchant::Billing::Response.new(true, 'Dwolla Checkout: Success')
+        ActiveMerchant::Billing::Response.new(true, Spree.t(:checkout_success, :scope => :dwolla))
       rescue ::Dwolla::APIError => exception
         payment_id = gateway_options[:order_id][(gateway_options[:order_id].index('-')+1)..-1]
         @payment = Spree::Payment.find_by_identifier(payment_id)
@@ -58,7 +58,7 @@ module Spree
         puts "Foobar"
         puts payment_id
 
-        ActiveMerchant::Billing::Response.new(false, 'Dwolla Checkout: Failure', { :message => "Dwolla failed: #{exception}" })
+        ActiveMerchant::Billing::Response.new(false, Spree.t(:checkout_failure, :scope => :dwolla), { :message => "Dwolla failed: #{exception}" })
       end
     end
 
