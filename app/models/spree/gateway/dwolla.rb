@@ -11,6 +11,10 @@ module Spree
 
     attr_accessible :preferred_dwolla_id, :preferred_key, :preferred_secret, :preferred_oauth_scope, :preferred_sandbox, :preferred_allow_funding_sources, :preferred_default_funding_source
 
+    def supports?(source)
+      true
+    end
+
     def payment_profiles_supported?
       true
     end
