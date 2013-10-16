@@ -12,19 +12,18 @@ module Spree
     end
 
     def transaction_status
+      # Wait 5 seconds for any previous action
+      # to finish, before processing the
+      # webhook message
+      sleep(5.seconds)
+
       dwolla_transaction_id = params["Transaction"]["Notes"]
       dwolla_transaction_id = dwolla_transaction_id[0..(dwolla_transaction_id.index('-')-1)]
       signature = request.headers["X-Dwolla-Signature"]
       payment_status = params["Transaction"]["Status"].downcase unless params["Transaction"]["Status"].nil?
 
       @order = Spree::Order.find_by_number(dwolla_transaction_id)
-      puts "foobar:"
-      puts dwolla_transaction_id
-      puts @order
-
       if(@order)
-        puts "got order!"
-
         @payment = @order.payments.where(:state => "pending", :source_type => Spree::DwollaCheckout).first
         if @payment
           @payment.log_entries.create(:details => request.raw_post + " (Signature: #{signature})")
@@ -53,7 +52,7 @@ module Spree
           end
         end
       else
-        puts "couldnt find order"
+        puts "webhook problem: couldnt find order"
       end
 
       render :nothing => true
