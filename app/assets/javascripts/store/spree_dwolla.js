@@ -1,3 +1,4 @@
+//= require store/spree_core
 SpreeDwolla = {
   qs: function(key) {
     key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&");
