@@ -26,10 +26,6 @@ module Spree
 
       @order = Spree::Order.find_by_number(dwolla_transaction_id)
 
-      puts "foobar:"
-      puts dwolla_transaction_id
-      puts @order
-
       if(@order)
         @payment = @order.payments.where(:state => "pending", :source_type => Spree::DwollaCheckout).first
         if @payment
@@ -58,8 +54,6 @@ module Spree
             @payment.failure!
           end
         end
-      else
-        puts "webhook problem: couldnt find order"
       end
 
       render :nothing => true
