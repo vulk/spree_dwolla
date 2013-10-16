@@ -3,8 +3,6 @@ module Spree
     #include ActiveMerchant::Billing::Integrations
     skip_before_filter :verify_authenticity_token
 
-    ssl_required
-
     def provider
       payment_method.provider
     end
@@ -25,7 +23,8 @@ module Spree
       puts @order
 
       if(@order)
-        puts "found order"
+        puts "got order!"
+
         @payment = @order.payments.where(:state => "pending", :source_type => Spree::DwollaCheckout).first
         if @payment
           @payment.log_entries.create(:details => request.raw_post + " (Signature: #{signature})")
@@ -54,7 +53,7 @@ module Spree
           end
         end
       else
-        puts "order not found"
+        puts "couldnt find order"
       end
 
       render :nothing => true
