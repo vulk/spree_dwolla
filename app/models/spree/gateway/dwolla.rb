@@ -11,6 +11,10 @@ module Spree
 
     attr_accessible :preferred_dwolla_id, :preferred_key, :preferred_secret, :preferred_oauth_scope, :preferred_sandbox, :preferred_allow_funding_sources, :preferred_default_funding_source
 
+    def supports?(source)
+      true
+    end
+
     def payment_profiles_supported?
       true
     end
@@ -50,15 +54,13 @@ module Spree
 
         dwolla_checkout.update_column(:transaction_id, transaction_id)
 
-        ActiveMerchant::Billing::Response.new(true, 'Dwolla Checkout: Success')
+        ActiveMerchant::Billing::Response.new(true, Spree.t(:checkout_success, :scope => :dwolla))
       rescue ::Dwolla::APIError => exception
         payment_id = gateway_options[:order_id][(gateway_options[:order_id].index('-')+1)..-1]
         @payment = Spree::Payment.find_by_identifier(payment_id)
         @payment.log_entries.create(:details => "Oops. Something went wrong. Dwolla said: #{exception}")
-        puts "Foobar"
-        puts payment_id
 
-        ActiveMerchant::Billing::Response.new(false, 'Dwolla Checkout: Failure', { :message => "Dwolla failed: #{exception}" })
+        ActiveMerchant::Billing::Response.new(false, Spree.t(:checkout_failure, :scope => :dwolla), { :message => "Dwolla failed: #{exception}" })
       end
     end
 

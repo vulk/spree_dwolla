@@ -1,5 +1,4 @@
-//= require store/spree_frontend
-
+//= require store/spree_core
 SpreeDwolla = {
   qs: function(key) {
     key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&");
@@ -9,12 +8,9 @@ SpreeDwolla = {
 
   hidePaymentSaveAndContinueButton: function(paymentMethod, preauth) {
     if (SpreeDwolla.paymentMethodID && paymentMethod.val() == SpreeDwolla.paymentMethodID) {
-      SpreeDwolla.oldUrl = $('#checkout_form_payment').attr('action');
       if(preauth) { $('.continue').hide(); }
-      $('#checkout_form_payment').attr('action', SpreeDwolla.payUrl)
     } else {
       if(preauth) { $('.continue').show(); }
-      $('#checkout_form_payment').attr('action', SpreeDwolla.oldUrl)
     }
   }
 }
