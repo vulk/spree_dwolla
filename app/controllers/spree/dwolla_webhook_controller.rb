@@ -20,7 +20,12 @@ module Spree
       payment_status = params["Transaction"]["Status"].downcase unless params["Transaction"]["Status"].nil?
 
       @order = Spree::Order.find_by_number(dwolla_transaction_id)
+      puts "foobar:"
+      puts dwolla_transaction_id
+      puts @order
+
       if(@order)
+        puts "found order"
         @payment = @order.payments.where(:state => "pending", :source_type => Spree::DwollaCheckout).first
         if @payment
           @payment.log_entries.create(:details => request.raw_post + " (Signature: #{signature})")
@@ -48,6 +53,8 @@ module Spree
             @payment.failure!
           end
         end
+      else
+        puts "order not found"
       end
 
       render :nothing => true
