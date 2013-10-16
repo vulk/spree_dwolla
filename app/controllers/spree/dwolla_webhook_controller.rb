@@ -3,6 +3,8 @@ module Spree
     #include ActiveMerchant::Billing::Integrations
     skip_before_filter :verify_authenticity_token
 
+    ssl_required
+
     def provider
       payment_method.provider
     end
@@ -23,6 +25,11 @@ module Spree
       payment_status = params["Transaction"]["Status"].downcase unless params["Transaction"]["Status"].nil?
 
       @order = Spree::Order.find_by_number(dwolla_transaction_id)
+
+      puts "foobar:"
+      puts dwolla_transaction_id
+      puts @order
+
       if(@order)
         @payment = @order.payments.where(:state => "pending", :source_type => Spree::DwollaCheckout).first
         if @payment
