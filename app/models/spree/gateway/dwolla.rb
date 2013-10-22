@@ -8,10 +8,11 @@ module Spree
     preference :sandbox, :boolean, :default => true
     preference :allow_funding_sources, :boolean, :default => false
     preference :default_funding_source, :string, default: 'Balance'
+    preference :allow_ach, :boolean, :default => false
     preference :your_oauth_token, :string
     preference :your_pin, :string
 
-    attr_accessible :preferred_dwolla_id, :preferred_key, :preferred_secret, :preferred_oauth_scope, :preferred_sandbox, :preferred_allow_funding_sources, :preferred_default_funding_source, :preferred_your_oauth_token, :preferred_your_pin
+    attr_accessible :preferred_dwolla_id, :preferred_key, :preferred_secret, :preferred_oauth_scope, :preferred_sandbox, :preferred_allow_funding_sources, :preferred_default_funding_source, :preferred_allow_ach, :preferred_your_oauth_token, :preferred_your_pin
 
     def supports?(source)
       true
@@ -22,7 +23,7 @@ module Spree
     end
 
     def auto_capture?
-      false
+      true
     end
 
     def method_type
@@ -44,8 +45,12 @@ module Spree
       provider_class
     end
 
-    def authorize(amount, dwolla_checkout, gateway_options={})
+    def purchase(amount, dwolla_checkout, gateway_options={})
       begin
+        order_id = gateway_options[:order_id].split('-')[0]
+        payment_id = gateway_options[:order_id].split('-')[1]
+        @payment = Spree::Payment.find_by_identifier(payment_id)
+
         transaction_id = provider::Transactions.send(
           {
             :destinationId => preferred_dwolla_id,
@@ -57,15 +62,35 @@ module Spree
 
         dwolla_checkout.update_column(:transaction_id, transaction_id)
 
-        ActiveMerchant::Billing::Response.new(true, Spree.t(:checkout_success, :scope => :dwolla))
+        # Auto clear "instant" payments
+        if dwolla_checkout.funding_source_id == 'Credit' or dwolla_checkout.funding_source_id == 'Balance'
+          @payment.complete!
+          @payment.log_entries.create(:details => "Instant-type Dwolla transaction. Payment marked as completed.")
+        end
+
+        ActiveMerchant::Billing::Response.new(
+          true,
+          Spree.t(:checkout_success, :scope => :dwolla)
+        )
       rescue ::Dwolla::APIError => exception
-        payment_id = gateway_options[:order_id][(gateway_options[:order_id].index('-')+1)..-1]
-        @payment = Spree::Payment.find_by_identifier(payment_id)
+        @payment.failure!
+
         @payment.log_entries.create(:details => "Oops. Something went wrong. Dwolla said: #{exception}")
 
-        ActiveMerchant::Billing::Response.new(false, Spree.t(:checkout_failure, :scope => :dwolla), { :message => "Dwolla failed: #{exception}" })
+        ActiveMerchant::Billing::Response.new(
+          false,
+          Spree.t(:checkout_failure, :scope => :dwolla),
+          { :message => "Dwolla failed: #{exception}" }
+        )
+      rescue => exception
+        @payment.log_entries.create(:details => "Oops. Something went wrong. Spree said: #{exception}")
+
+        ActiveMerchant::Billing::Response.new(
+          false,
+          Spree.t(:checkout_failure, :scope => :dwolla),
+          { :message => "Something went wrong: #{exception}" }
+        )
       end
     end
-
   end
 end
