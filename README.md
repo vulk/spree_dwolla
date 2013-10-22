@@ -1,9 +1,9 @@
 # Official Dwolla for Spree
-=================================================================================
 
-This is the official Dwolla OAuth / REST extension for Spree.
+This is the official Dwolla OAuth / REST extension for Spree v/1.3.
 
 ## Version
+
 1.1.0
 
 ## Installation
