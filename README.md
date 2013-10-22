@@ -4,7 +4,7 @@ This is the official Dwolla OAuth / REST extension for Spree.
 
 ## Version
 
-1.0.5
+1.1.0
 
 ## Installation
 
@@ -45,6 +45,10 @@ If you're running on localhost, you can easily create a tunnel using "ngrok".
 
 
 ## Changelog
+
+1.1.0
+
+* Add the ability to manually poll Dwolla for transaction updates
 
 1.0.5
 
