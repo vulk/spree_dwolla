@@ -1,5 +1,4 @@
 # Official Dwolla for Spree
-=================================================================================
 
 This is the official Dwolla OAuth / REST extension for Spree.
 
