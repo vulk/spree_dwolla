@@ -105,4 +105,3 @@ If you're running on localhost, you can easily create a tunnel using "ngrok".
 - Michael Schonfeld &lt;michael@dwolla.com&gt;
 
 Copyright (c) 2013 Michael Schonfeld / Dwolla, released under the New BSD License
->>>>>>> 2-0-stable
