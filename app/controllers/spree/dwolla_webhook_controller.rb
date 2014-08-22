@@ -64,7 +64,7 @@ module Spree
       end
 
       def payment_method
-        Spree::PaymentMethod.find(:first, :conditions => [ "lower(name) = ?", 'dwolla' ]) || raise(ActiveRecord::RecordNotFound)
+        Spree::PaymentMethod.where("lower(name) = ?", 'dwolla').first || raise(ActiveRecord::RecordNotFound)
       end
 
   end

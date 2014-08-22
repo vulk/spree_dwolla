@@ -22,6 +22,7 @@ module Spree
     def return
       begin
         code = params['code']
+
         return render 'spree/checkout/payment/dwolla_cancel', :layout => false if code.nil?
 
         token = provider::OAuth.get_token(code, dwolla_return_url)
@@ -119,7 +120,7 @@ module Spree
       end
 
       def payment_method
-        @payment_method ||= Spree::PaymentMethod.find(:first, :conditions => [ "lower(name) = ?", 'dwolla' ]) || raise(ActiveRecord::RecordNotFound)
+        @payment_method ||= Spree::PaymentMethod.where("lower(name) = ?", 'dwolla').first || raise(ActiveRecord::RecordNotFound)
       end
 
       def provider

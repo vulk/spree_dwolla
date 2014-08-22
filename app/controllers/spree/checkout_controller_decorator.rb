@@ -3,7 +3,7 @@ module Spree
     after_filter :create_dwolla_payment, :only => [:update]
 
     def payment_method
-      Spree::PaymentMethod.find(:first, :conditions => [ "lower(name) = ?", 'dwolla' ]) || raise(ActiveRecord::RecordNotFound)
+      Spree::PaymentMethod.where("lower(name) = ?", 'dwolla').first || raise(ActiveRecord::RecordNotFound)
     end
 
     def create_dwolla_payment
