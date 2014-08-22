@@ -11,5 +11,5 @@ tmp
 nbproject
 pkg
 *.swp
-*.gem
+*.bak
 spec/dummy
