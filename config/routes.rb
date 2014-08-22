@@ -1,4 +1,4 @@
-Spree::Core::Engine.routes.draw do
+Spree::Core::Engine.add_routes do
 
   get '/dwolla/auth', :to => "dwolla#auth", :as => :dwolla_auth
   get '/dwolla/logout', :to => "dwolla#logout", :as => :dwolla_logout
