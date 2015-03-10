@@ -25,7 +25,8 @@ module Spree
 
         return render 'spree/checkout/payment/dwolla_cancel', :layout => false if code.nil?
 
-        token = provider::OAuth.get_token(code, dwolla_return_url)
+        info = provider::OAuth.get_token(code, dwolla_return_url)
+        token = info['access_token']
         me = Dwolla::Users.me(token)
 
         if payment_method.preferred_allow_funding_sources
